@@ -100,20 +100,20 @@ relayHUMIoff:
 I2C_start:
     LDI   R21, (1<<TWINT)|(1<<TWSTA)|(1<<TWEN); Load start condition and enable TWI into R21
     STS   TWCR, R21     ; Set TWI control register
-wt1:
-    LDS   R21, TWCR     ; Load TWI control register into R21
-    SBRS  R21, TWINT    ; Skip if TWI interrupt flag is set
-    RJMP  wt1           ; Wait for start condition to complete
+    wt1:
+        LDS   R21, TWCR     ; Load TWI control register into R21
+        SBRS  R21, TWINT    ; Skip if TWI interrupt flag is set
+        RJMP  wt1           ; Wait for start condition to complete
     RET
 
 I2C_write:
     STS   TWDR, R27     ; Load data to be sent into TWI data register
     LDI   R21, (1<<TWINT)|(1<<TWEN); Load TWI enable and interrupt flags into R21
     STS   TWCR, R21     ; Set TWI control register
-wt2:
-    LDS   R21, TWCR     ; Load TWI control register into R21
-    SBRS  R21, TWINT    ; Skip if TWI interrupt flag is set
-    RJMP  wt2           ; Wait for data transmission to complete
+    wt2:
+        LDS   R21, TWCR     ; Load TWI control register into R21
+        SBRS  R21, TWINT    ; Skip if TWI interrupt flag is set
+        RJMP  wt2           ; Wait for data transmission to complete
     RET
 
 select_data:
@@ -121,13 +121,12 @@ select_data:
     ANDI  R21, 0x80     ; Mask all but PD7
     CPI   R21, 0x80     ; Compare with 0x80 (PD7 high)
     BREQ  change        ; If PD7 is high, jump to change
-    
     MOV   R27, R18      ; Move temperature data to R27
     RET
     
-change:
-    MOV R27, R19        ; Move humidity data to R27
-    RET
+    change:
+        MOV R27, R19        ; Move humidity data to R27
+        RET
 
 I2C_stop:
     LDI   R21, (1<<TWINT)|(1<<TWSTO)|(1<<TWEN); Load stop condition and enable TWI into R21
@@ -158,17 +157,17 @@ w5:
 ; Delay 20 ms
 delay20ms:
     LDI   R21, 255      ; Load counter value into R21
-l1_20ms:
-    LDI   R22, 210      ; Load inner loop counter into R22
-l2_20ms:
-    LDI   R23, 2        ; Load innermost loop counter into R23
-l3_20ms:
-    DEC   R23           ; Decrement innermost counter
-    BRNE  l3_20ms       ; Repeat until zero
-    DEC   R22           ; Decrement middle counter
-    BRNE  l2_20ms       ; Repeat until zero
-    DEC   R21           ; Decrement outer counter
-    BRNE  l1_20ms       ; Repeat until zero
+    l1_20ms:
+        LDI   R22, 210      ; Load inner loop counter into R22
+        l2_20ms:
+            LDI   R23, 2        ; Load innermost loop counter into R23
+            l3_20ms:
+                DEC   R23           ; Decrement innermost counter
+                BRNE  l3_20ms       ; Repeat until zero
+            DEC   R22           ; Decrement middle counter
+            BRNE  l2_20ms       ; Repeat until zero
+        DEC   R21           ; Decrement outer counter
+        BRNE  l1_20ms       ; Repeat until zero
     RET
 
 ; Delay 2 seconds with Timer 1
@@ -178,8 +177,19 @@ delaytimer2s:
     STS TCNT1H, R20     ; Set Timer 1 counter high byte
     LDI R20, lo8(value) ; Load low byte of count value
     STS TCNT1L, R20     ; Set Timer 1 counter low byte
-   
-
+    LDI R20, 0b00000000
+    STS TCCR1A, R20
+    LDI R20, 0b00000101
+    STS TCCR1B, R20
+    l3:
+    IN R20, TIFR1 
+    SBRS R20, TOV1 
+    RJMP l3
+    LDI R20, 1<<TOV1 
+    OUT TIFR1, R20 
+    LDI R20, 0b00000000
+    STS TCCR1B, R20
+    RET
 
 delaytimer0:
     CLR   R20              ; Clear R20, setting it to 0
@@ -193,10 +203,8 @@ cTimer0:
     IN    R20, TIFR0       ; Read Timer/Counter0 Interrupt Flag Register (TIFR0) into R20
     SBRS  R20, OCF0A       ; Skip the next instruction if the Output Compare Flag A (OCF0A) is set
     RJMP  cTimer0          ; Repeat until OCF0A is set (waiting for the compare match)
-
     CLR   R20              ; Clear R20
     OUT   TCCR0B, R20      ; Clear TCCR0B, stopping the timer
-
     LDI   R20, (1<<OCF0A)  ; Load the OCF0A bit into R20
     OUT   TIFR0, R20       ; Clear the OCF0A flag by writing 1 to it
     RET                    ; Return from subroutine
