@@ -39,8 +39,9 @@ ASCII_MSD:
     MOV R28, R16             ; Move result to R28
     SUBI R28, 58             ; Check if result is greater than '9'
     BRPL A_F_D1              ; If greater than '9', jump to A_F_D1
-l1:
-    RET                      ; Return
+    l1:
+        RET                  ; Return
+
 A_F_D1:
     SUBI R16, -7             ; Convert to ASCII ('A'-'F')
     RJMP l1
@@ -53,8 +54,9 @@ ASCII_LSD:
     MOV R28, R16             ; Move result to R28
     SUBI R28, 58             ; Check if result is greater than '9'
     BRPL A_F_D0              ; If greater than '9', jump to A_F_D0
-l2:
-    RET                      ; Return
+    l2:
+        RET                  ; Return
+
 A_F_D0:
     SUBI R16, -7             ; Convert to ASCII ('A'-'F')
     RJMP l2
@@ -62,19 +64,15 @@ A_F_D0:
 ; Print the value via UART
 printval:
     MOV R16, R27             ; Move I2C data (R27) to R16
-
     RCALL ASCII_MSD          ; Convert most significant digit to ASCII
     RCALL LCD_buffer         ; Wait for UART buffer to be ready
     STS UDR0, R16            ; Send most significant digit via UART
-    
     RCALL ASCII_LSD          ; Convert least significant digit to ASCII
     RCALL LCD_buffer         ; Wait for UART buffer to be ready
     STS UDR0, R16            ; Send least significant digit via UART
-    
     RCALL LCD_buffer         ; Wait for UART buffer to be ready
     LDI R16, 0x0A            ; Load newline character (line feed)
     STS UDR0, R16            ; Send newline via UART
-    
     RCALL LCD_buffer         ; Wait for UART buffer to be ready
     LDI R16, 0x0D            ; Load carriage return character
     STS UDR0, R16            ; Send carriage return via UART
@@ -119,7 +117,7 @@ delaytimer2s:
     STS TCCR1A, R20          ; Set TCCR1A
     LDI R20, 0b00000101      ; Set Timer/Counter1 prescaler to 1024 (CS12 and CS10)
     STS TCCR1B, R20          ; Set TCCR1B
-l3:
+    l3:
     IN R20, TIFR1            ; Load Timer/Counter1 Interrupt Flag Register into R20
     SBRS R20, TOV1           ; Skip if Timer Overflow Flag is set
     RJMP l3                  ; Wait until Timer Overflow Flag is set
