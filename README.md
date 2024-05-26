@@ -22,6 +22,7 @@ The automatic control system using Arduino ATmega328P and assembly language show
 The Smart Room system offers an effective solution for maintaining optimal environmental conditions through a master-slave setup using two Arduino Uno microcontrollers. The master Arduino continuously gathers data from the DHT11 sensor to monitor temperature and humidity, making decisions to control the air conditioner and humidifier via the slave Arduino, which operates the relays. This configuration ensures efficient task distribution and reliable climate control. Real-time data monitoring allows the system to maintain a comfortable and healthy environment automatically, while an LED indicator and manual override button provide users with immediate feedback and control. By seamlessly integrating automation with user interaction, the Smart Room enhances living conditions and promotes better air quality, making it a valuable addition to modern homes.
 
 ## Images
+
 - Real Circuit
 ![image](https://github.com/IvanYuantama/SmartRoom-Kelompok10-SSF/assets/123520791/797eb939-a81b-4c61-a053-c4149950ef80)
 - Testing Result when Humidity is lower than 40%
