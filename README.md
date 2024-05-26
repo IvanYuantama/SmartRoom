@@ -21,6 +21,18 @@ The automatic control system using Arduino ATmega328P and assembly language show
 ## v. Conclusion
 The Smart Room system offers an effective solution for maintaining optimal environmental conditions through a master-slave setup using two Arduino Uno microcontrollers. The master Arduino continuously gathers data from the DHT11 sensor to monitor temperature and humidity, making decisions to control the air conditioner and humidifier via the slave Arduino, which operates the relays. This configuration ensures efficient task distribution and reliable climate control. Real-time data monitoring allows the system to maintain a comfortable and healthy environment automatically, while an LED indicator and manual override button provide users with immediate feedback and control. By seamlessly integrating automation with user interaction, the Smart Room enhances living conditions and promotes better air quality, making it a valuable addition to modern homes.
 
+## Run Proteus
+    1. Install library for Relay on your proteus (Dont Forget Install arduino too)
+    2. Open the proteus file, and import file hex for slave and master by doing
+       RightClick Arduino => Edit Properties => Program File
+    3. Run the simulation on proteus :)
+
+Link installation relay : 
+```https://shorturl.at/VBwZS```
+
+Link installation arduino :
+```https://shorturl.at/jBjz8```
+
 ## Images
 
 - Real Circuit
